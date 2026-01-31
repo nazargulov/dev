@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IG Story Downloader - Pobieraj Instagram Stories | DEV ILSHAT NAZARGULOV</title>
-    <meta name="description" content="Pobieraj Instagram Stories, Reels i filmy jednym kliknięciem. Rozszerzenie Chrome do łatwego zapisywania treści z Instagrama.">
+    <title>Pobieranie Stories z Instagrama - IG Story Downloader | DEV ILSHAT NAZARGULOV</title>
+    <meta name="description" content="Pobieraj Instagram Stories, Reels i filmy jednym kliknięciem. Rozszerzenie Chrome do łatwego zapisywania treści z Instagrama. Tylko 2 zł za pobranie!">
+    <meta name="keywords" content="pobieranie stories z instagrama, pobieranie story z instagrama, instagram downloader, story downloader, reels downloader">
+    <link rel="canonical" href="https://nazargulov.github.io/dev/insta-story-pl/">
     <style>
         * {
             margin: 0;
@@ -36,10 +38,28 @@
             align-items: center;
         }
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 1.3rem;
             font-weight: bold;
             color: #E1306C;
             text-decoration: none;
+        }
+        .poland-flag {
+            width: 28px;
+            height: 18px;
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .poland-flag .white {
+            height: 50%;
+            background: #fff;
+        }
+        .poland-flag .red {
+            height: 50%;
+            background: #DC143C;
         }
         nav a {
             margin-left: 25px;
@@ -57,14 +77,27 @@
             color: white;
         }
         .hero h1 {
-            font-size: 3rem;
+            font-size: 2.8rem;
             margin-bottom: 20px;
         }
         .hero p {
             font-size: 1.3rem;
             opacity: 0.95;
             max-width: 700px;
-            margin: 0 auto 40px;
+            margin: 0 auto 30px;
+        }
+        .hero-price {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .hero-price span {
+            font-size: 2rem;
         }
         .btn-primary {
             display: inline-block;
@@ -80,6 +113,12 @@
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .free-badge {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
         .features {
             padding: 80px 20px;
@@ -117,57 +156,58 @@
             text-align: center;
         }
         .pricing h2 {
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             font-size: 2rem;
         }
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 900px;
-            margin: 0 auto;
+        .pricing-subtitle {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 50px;
+            font-size: 1.1rem;
         }
         .pricing-card {
             background: white;
-            border: 2px solid #eee;
-            border-radius: 20px;
-            padding: 40px;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            border-color: #E1306C;
-        }
-        .pricing-card.featured {
-            border-color: #E1306C;
+            border: 3px solid #E1306C;
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 450px;
+            margin: 0 auto;
             position: relative;
+            box-shadow: 0 10px 40px rgba(225, 48, 108, 0.15);
         }
-        .pricing-card.featured::before {
-            content: 'Popularne';
+        .pricing-card::before {
+            content: 'Proste i przejrzyste';
             position: absolute;
-            top: -12px;
+            top: -14px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #833AB4 0%, #E1306C 100%);
             color: white;
-            padding: 5px 20px;
+            padding: 6px 24px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
         .pricing-card h3 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-bottom: 10px;
+            color: #333;
         }
         .price {
-            font-size: 3rem;
+            font-size: 4rem;
             font-weight: bold;
             color: #E1306C;
-            margin: 20px 0;
+            margin: 25px 0;
+            line-height: 1;
         }
         .price span {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #666;
             font-weight: normal;
+        }
+        .price-note {
+            color: #666;
+            margin-bottom: 30px;
         }
         .pricing-card ul {
             list-style: none;
@@ -175,32 +215,41 @@
             text-align: left;
         }
         .pricing-card li {
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .pricing-card li::before {
             content: '✓';
             color: #28a745;
-            margin-right: 10px;
             font-weight: bold;
+            font-size: 1.2rem;
         }
         .btn-buy {
             display: inline-block;
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             background: linear-gradient(135deg, #833AB4 0%, #E1306C 100%);
             color: white;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: bold;
-            transition: opacity 0.3s;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .btn-buy:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(225, 48, 108, 0.4);
         }
-        .btn-free {
-            background: #f8f9fa;
-            color: #333;
+        .free-download {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            color: #2e7d32;
+            font-weight: 500;
         }
         .how-it-works {
             padding: 80px 20px;
@@ -238,6 +287,39 @@
             font-weight: bold;
             margin: 0 auto 20px;
         }
+        .payment-info {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 50px 20px;
+            text-align: center;
+            color: white;
+        }
+        .payment-info h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .payment-info p {
+            max-width: 600px;
+            margin: 0 auto 25px;
+            opacity: 0.9;
+        }
+        .payment-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .payment-badge {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        .payment-badge.blik {
+            background: #000;
+            color: #fff;
+        }
         .faq {
             padding: 80px 20px;
         }
@@ -253,17 +335,18 @@
         .faq-item {
             background: white;
             border: 1px solid #eee;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 15px;
             overflow: hidden;
         }
         .faq-question {
             padding: 20px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background 0.3s;
         }
         .faq-question:hover {
             background: #f8f9fa;
@@ -271,29 +354,7 @@
         .faq-answer {
             padding: 0 20px 20px;
             color: #666;
-        }
-        .payment-info {
-            background: #f0f4ff;
-            padding: 40px 20px;
-            text-align: center;
-        }
-        .payment-info p {
-            max-width: 600px;
-            margin: 0 auto 20px;
-        }
-        .payment-badges {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .payment-badge {
-            background: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            color: #333;
+            line-height: 1.7;
         }
         footer {
             background: #1a1a2e;
@@ -334,6 +395,9 @@
             .hero p {
                 font-size: 1rem;
             }
+            .price {
+                font-size: 3rem;
+            }
             nav {
                 display: none;
             }
@@ -343,7 +407,13 @@
 <body>
     <header>
         <div class="container">
-            <a href="../index.html" class="logo">IG Story Downloader</a>
+            <a href="../index.html" class="logo">
+                <div class="poland-flag">
+                    <div class="white"></div>
+                    <div class="red"></div>
+                </div>
+                Story Downloader
+            </a>
             <nav>
                 <a href="#features">Funkcje</a>
                 <a href="#pricing">Cennik</a>
@@ -355,45 +425,48 @@
 
     <section class="hero">
         <div class="container">
-            <h1>IG Story Downloader</h1>
-            <p>Pobieraj Instagram Stories, Reels i filmy bezpośrednio na swoje urządzenie. Zapisuj ulubione treści jednym kliknięciem!</p>
-            <a href="#pricing" class="btn-primary">Wypróbuj za darmo</a>
+            <h1>Pobieranie Stories z Instagrama</h1>
+            <p>Pobieraj Instagram Stories, Reels i filmy bezpośrednio na swoje urządzenie. Szybko, bezpiecznie i bez komplikacji!</p>
+            <div class="hero-price">Tylko <span>2 zł</span> za pobranie</div>
+            <br>
+            <a href="#pricing" class="btn-primary">Zainstaluj rozszerzenie</a>
+            <span class="free-badge">1 darmowe pobranie przy instalacji!</span>
         </div>
     </section>
 
     <section class="features" id="features">
         <div class="container">
-            <h2>Dlaczego IG Story Downloader?</h2>
+            <h2>Dlaczego wybrać nasze rozszerzenie?</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">📥</div>
                     <h3>Jedno kliknięcie</h3>
-                    <p>Pobieraj Stories i Reels bez zbędnych kroków. Po prostu kliknij i zapisz.</p>
+                    <p>Pobieraj Stories i Reels bez zbędnych kroków. Po prostu kliknij i zapisz na dysk.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🎬</div>
                     <h3>Stories, Reels & Posty</h3>
-                    <p>Obsługa wszystkich typów treści z Instagrama - zdjęcia i filmy.</p>
+                    <p>Obsługa wszystkich typów treści z Instagrama - zarówno zdjęcia jak i filmy.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <h3>Szybkie pobieranie</h3>
-                    <p>Wysokiej jakości pliki pobierane błyskawicznie na Twój komputer.</p>
+                    <h3>Najwyższa jakość</h3>
+                    <p>Pliki pobierane w oryginalnej rozdzielczości HD, bez kompresji.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
-                    <h3>Bezpieczne</h3>
-                    <p>Nie przechowujemy Twoich danych. Rozszerzenie działa lokalnie w przeglądarce.</p>
+                    <h3>Prywatne i bezpieczne</h3>
+                    <p>Nie przechowujemy Twoich danych. Instagram nie jest powiadamiany o pobraniu.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Działa w Chrome</h3>
-                    <p>Zainstaluj rozszerzenie i korzystaj z niego bezpośrednio na Instagramie.</p>
+                    <div class="feature-icon">💳</div>
+                    <h3>Płać ile używasz</h3>
+                    <p>Bez abonamentów i ukrytych opłat. Płacisz tylko za to, co pobierasz.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">💾</div>
-                    <h3>Kopia zapasowa</h3>
-                    <p>Twórz kopie zapasowe swoich ulubionych treści na wypadek ich usunięcia.</p>
+                    <div class="feature-icon">🇵🇱</div>
+                    <h3>Polski support</h3>
+                    <p>Rozszerzenie w całości po polsku. Wsparcie techniczne w języku polskim.</p>
                 </div>
             </div>
         </div>
@@ -406,7 +479,7 @@
                 <div class="step">
                     <div class="step-number">1</div>
                     <h3>Zainstaluj rozszerzenie</h3>
-                    <p>Pobierz IG Story Downloader z Chrome Web Store</p>
+                    <p>Pobierz rozszerzenie z Chrome Web Store jednym kliknięciem</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
@@ -415,8 +488,8 @@
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Kliknij przycisk</h3>
-                    <p>Użyj przycisku pobierania, aby zapisać treść</p>
+                    <h3>Kliknij i pobierz</h3>
+                    <p>Użyj przycisku pobierania aby zapisać treść na dysk</p>
                 </div>
             </div>
         </div>
@@ -424,30 +497,25 @@
 
     <section class="pricing" id="pricing">
         <div class="container">
-            <h2>Wybierz plan</h2>
-            <div class="pricing-cards">
-                <div class="pricing-card">
-                    <h3>Darmowy</h3>
-                    <div class="price">0 zł</div>
-                    <ul>
-                        <li>Pobieranie Stories (limit 5/dzień)</li>
-                        <li>Podstawowa jakość</li>
-                        <li>Wsparcie społeczności</li>
-                    </ul>
-                    <a href="#" class="btn-buy btn-free">Zainstaluj za darmo</a>
-                </div>
-                <div class="pricing-card featured">
-                    <h3>Premium</h3>
-                    <div class="price">19,99 zł<span>/miesiąc</span></div>
-                    <ul>
-                        <li>Nieograniczone pobieranie</li>
-                        <li>Stories, Reels, Posty</li>
-                        <li>Najwyższa jakość (HD)</li>
-                        <li>Pobieranie zbiorcze</li>
-                        <li>Priorytetowe wsparcie</li>
-                        <li>Brak reklam</li>
-                    </ul>
-                    <a href="#" class="btn-buy">Kup Premium</a>
+            <h2>Prosty cennik</h2>
+            <p class="pricing-subtitle">Żadnych abonamentów. Żadnych ukrytych opłat. Płacisz tylko za to, co pobierasz.</p>
+
+            <div class="pricing-card">
+                <h3>Płatność za pobranie</h3>
+                <div class="price">2 zł <span>/ pobranie</span></div>
+                <p class="price-note">Jedno pobranie = jeden plik (story, reels lub post)</p>
+                <ul>
+                    <li>Pobieranie Stories w HD</li>
+                    <li>Pobieranie Reels</li>
+                    <li>Pobieranie postów (zdjęcia i filmy)</li>
+                    <li>Szybka płatność BLIK</li>
+                    <li>Płatność kartą Visa/Mastercard</li>
+                    <li>Bez limitu czasowego</li>
+                    <li>Kredyty nie wygasają</li>
+                </ul>
+                <a href="#" class="btn-buy">Zainstaluj rozszerzenie</a>
+                <div class="free-download">
+                    🎁 <strong>1 darmowe pobranie</strong> przy pierwszej instalacji!
                 </div>
             </div>
         </div>
@@ -455,12 +523,13 @@
 
     <section class="payment-info">
         <div class="container">
-            <p>Bezpieczne płatności obsługiwane przez PayU. Akceptujemy karty, BLIK i przelewy online.</p>
+            <h3>Bezpieczne płatności</h3>
+            <p>Płatności obsługiwane przez PayU - lidera płatności online w Polsce. Twoje dane są w 100% bezpieczne.</p>
             <div class="payment-badges">
-                <div class="payment-badge">PayU</div>
+                <div class="payment-badge blik">BLIK</div>
                 <div class="payment-badge">VISA</div>
                 <div class="payment-badge">Mastercard</div>
-                <div class="payment-badge">BLIK</div>
+                <div class="payment-badge">PayU</div>
             </div>
         </div>
     </section>
@@ -471,10 +540,18 @@
             <div class="faq-list">
                 <div class="faq-item">
                     <div class="faq-question">
-                        Czy to legalne?
+                        Jak działa płatność?
                     </div>
                     <div class="faq-answer">
-                        Rozszerzenie służy do pobierania treści, do których masz dostęp. Używaj go zgodnie z warunkami korzystania z Instagrama i przepisami prawa autorskiego. Pobieraj tylko własne treści lub te, do których masz zgodę.
+                        Każde pobranie kosztuje 2 zł. Płacisz przez BLIK lub kartę bezpośrednio w rozszerzeniu. Po zatwierdzeniu płatności plik zostaje pobrany automatycznie. Kredyty nie wygasają - możesz ich użyć kiedy chcesz.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Czy Instagram widzi, że pobieram stories?
+                    </div>
+                    <div class="faq-answer">
+                        Nie. Rozszerzenie działa lokalnie w Twojej przeglądarce i nie wysyła żadnych informacji do Instagrama. Właściciel konta nie otrzymuje powiadomienia o pobraniu.
                     </div>
                 </div>
                 <div class="faq-item">
@@ -482,15 +559,15 @@
                         Czy moje dane są bezpieczne?
                     </div>
                     <div class="faq-answer">
-                        Tak. Nie przechowujemy żadnych danych logowania ani treści. Rozszerzenie działa lokalnie w Twojej przeglądarce. Nie mamy dostępu do Twojego konta Instagram.
+                        Tak. Nie przechowujemy żadnych danych logowania ani treści. Rozszerzenie działa lokalnie w Twojej przeglądarce. Płatności obsługuje PayU - zaufany operator płatności.
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        Jak anulować subskrypcję?
+                        Czy mogę pobrać stories z prywatnych kont?
                     </div>
                     <div class="faq-answer">
-                        Możesz anulować subskrypcję w dowolnym momencie poprzez panel rozszerzenia lub kontaktując się z nami. Po anulowaniu dostęp Premium będzie aktywny do końca opłaconego okresu.
+                        Możesz pobierać tylko treści, do których masz dostęp. Jeśli obserwujesz prywatne konto i widzisz jego stories - możesz je pobrać. Nie ma możliwości pobierania treści z kont, których nie obserwujesz.
                     </div>
                 </div>
                 <div class="faq-item">
@@ -506,7 +583,7 @@
                         Rozszerzenie nie działa. Co robić?
                     </div>
                     <div class="faq-answer">
-                        Spróbuj odświeżyć stronę Instagram i ponownie uruchomić przeglądarkę. Jeśli problem występuje nadal, skontaktuj się z nami: ilshat@nazargulov.com
+                        Spróbuj odświeżyć stronę Instagram (F5) i ponownie uruchomić przeglądarkę. Upewnij się, że rozszerzenie jest włączone. Jeśli problem występuje nadal, napisz do nas: <a href="mailto:ilshat@nazargulov.com">ilshat@nazargulov.com</a>
                     </div>
                 </div>
             </div>
@@ -517,8 +594,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>IG Story Downloader</h4>
-                    <p style="color: #aaa;">Rozszerzenie Chrome do pobierania treści z Instagrama. Proste, szybkie, bezpieczne.</p>
+                    <h4>Story Downloader</h4>
+                    <p style="color: #aaa;">Rozszerzenie Chrome do pobierania treści z Instagrama. Proste, szybkie, bezpieczne. Stworzone w Polsce.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Linki</h4>
