@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG Story Downloader - Pobieraj Instagram Stories | DEV ILSHAT NAZARGULOV</title>
+    <meta name="description" content="Pobieraj Instagram Stories, Reels i filmy jednym kliknięciem. Rozszerzenie Chrome do łatwego zapisywania treści z Instagrama.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #E1306C;
+            text-decoration: none;
+        }
+        nav a {
+            margin-left: 25px;
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #E1306C;
+        }
+        .hero {
+            background: linear-gradient(135deg, #833AB4 0%, #E1306C 50%, #F77737 100%);
+            padding: 150px 20px 80px;
+            text-align: center;
+            color: white;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        .btn-primary {
+            display: inline-block;
+            padding: 18px 50px;
+            background: white;
+            color: #E1306C;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .features {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+        .features h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .feature-card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            color: #E1306C;
+            margin-bottom: 15px;
+        }
+        .pricing {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .pricing h2 {
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 20px;
+            padding: 40px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #E1306C;
+        }
+        .pricing-card.featured {
+            border-color: #E1306C;
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: 'Popularne';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #833AB4 0%, #E1306C 100%);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #E1306C;
+            margin: 20px 0;
+        }
+        .price span {
+            font-size: 1rem;
+            color: #666;
+            font-weight: normal;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .pricing-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .pricing-card li::before {
+            content: '✓';
+            color: #28a745;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .btn-buy {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #833AB4 0%, #E1306C 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+        .btn-buy:hover {
+            opacity: 0.9;
+        }
+        .btn-free {
+            background: #f8f9fa;
+            color: #333;
+        }
+        .how-it-works {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+        .how-it-works h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+        .steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+        }
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #833AB4 0%, #E1306C 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        .faq {
+            padding: 80px 20px;
+        }
+        .faq h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+        }
+        .payment-info {
+            background: #f0f4ff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .payment-info p {
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        .payment-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .payment-badge {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 60px 20px 30px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+        }
+        .footer-section h4 {
+            margin-bottom: 20px;
+            color: #E1306C;
+        }
+        .footer-section a {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-section a:hover {
+            color: white;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+            color: #888;
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">IG Story Downloader</a>
+            <nav>
+                <a href="#features">Funkcje</a>
+                <a href="#pricing">Cennik</a>
+                <a href="#faq">FAQ</a>
+                <a href="../polityka-zwrotow.html">Zwroty</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>IG Story Downloader</h1>
+            <p>Pobieraj Instagram Stories, Reels i filmy bezpośrednio na swoje urządzenie. Zapisuj ulubione treści jednym kliknięciem!</p>
+            <a href="#pricing" class="btn-primary">Wypróbuj za darmo</a>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Dlaczego IG Story Downloader?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📥</div>
+                    <h3>Jedno kliknięcie</h3>
+                    <p>Pobieraj Stories i Reels bez zbędnych kroków. Po prostu kliknij i zapisz.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>Stories, Reels & Posty</h3>
+                    <p>Obsługa wszystkich typów treści z Instagrama - zdjęcia i filmy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Szybkie pobieranie</h3>
+                    <p>Wysokiej jakości pliki pobierane błyskawicznie na Twój komputer.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Bezpieczne</h3>
+                    <p>Nie przechowujemy Twoich danych. Rozszerzenie działa lokalnie w przeglądarce.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Działa w Chrome</h3>
+                    <p>Zainstaluj rozszerzenie i korzystaj z niego bezpośrednio na Instagramie.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Kopia zapasowa</h3>
+                    <p>Twórz kopie zapasowe swoich ulubionych treści na wypadek ich usunięcia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h2>Jak to działa?</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Zainstaluj rozszerzenie</h3>
+                    <p>Pobierz IG Story Downloader z Chrome Web Store</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Otwórz Instagram</h3>
+                    <p>Przejdź do Stories, Reels lub posta, który chcesz pobrać</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Kliknij przycisk</h3>
+                    <p>Użyj przycisku pobierania, aby zapisać treść</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2>Wybierz plan</h2>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>Darmowy</h3>
+                    <div class="price">0 zł</div>
+                    <ul>
+                        <li>Pobieranie Stories (limit 5/dzień)</li>
+                        <li>Podstawowa jakość</li>
+                        <li>Wsparcie społeczności</li>
+                    </ul>
+                    <a href="#" class="btn-buy btn-free">Zainstaluj za darmo</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">19,99 zł<span>/miesiąc</span></div>
+                    <ul>
+                        <li>Nieograniczone pobieranie</li>
+                        <li>Stories, Reels, Posty</li>
+                        <li>Najwyższa jakość (HD)</li>
+                        <li>Pobieranie zbiorcze</li>
+                        <li>Priorytetowe wsparcie</li>
+                        <li>Brak reklam</li>
+                    </ul>
+                    <a href="#" class="btn-buy">Kup Premium</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="payment-info">
+        <div class="container">
+            <p>Bezpieczne płatności obsługiwane przez PayU. Akceptujemy karty, BLIK i przelewy online.</p>
+            <div class="payment-badges">
+                <div class="payment-badge">PayU</div>
+                <div class="payment-badge">VISA</div>
+                <div class="payment-badge">Mastercard</div>
+                <div class="payment-badge">BLIK</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <div class="container">
+            <h2>Często zadawane pytania</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Czy to legalne?
+                    </div>
+                    <div class="faq-answer">
+                        Rozszerzenie służy do pobierania treści, do których masz dostęp. Używaj go zgodnie z warunkami korzystania z Instagrama i przepisami prawa autorskiego. Pobieraj tylko własne treści lub te, do których masz zgodę.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Czy moje dane są bezpieczne?
+                    </div>
+                    <div class="faq-answer">
+                        Tak. Nie przechowujemy żadnych danych logowania ani treści. Rozszerzenie działa lokalnie w Twojej przeglądarce. Nie mamy dostępu do Twojego konta Instagram.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Jak anulować subskrypcję?
+                    </div>
+                    <div class="faq-answer">
+                        Możesz anulować subskrypcję w dowolnym momencie poprzez panel rozszerzenia lub kontaktując się z nami. Po anulowaniu dostęp Premium będzie aktywny do końca opłaconego okresu.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Czy mogę otrzymać zwrot?
+                    </div>
+                    <div class="faq-answer">
+                        Tak, oferujemy zwrot w ciągu 14 dni od zakupu zgodnie z prawem konsumenckim. Szczegóły znajdziesz w naszej <a href="../polityka-zwrotow.html">Polityce Zwrotów</a>.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Rozszerzenie nie działa. Co robić?
+                    </div>
+                    <div class="faq-answer">
+                        Spróbuj odświeżyć stronę Instagram i ponownie uruchomić przeglądarkę. Jeśli problem występuje nadal, skontaktuj się z nami: ilshat@nazargulov.com
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>IG Story Downloader</h4>
+                    <p style="color: #aaa;">Rozszerzenie Chrome do pobierania treści z Instagrama. Proste, szybkie, bezpieczne.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Linki</h4>
+                    <a href="../index.html">Strona główna</a>
+                    <a href="#features">Funkcje</a>
+                    <a href="#pricing">Cennik</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Dokumenty</h4>
+                    <a href="../polityka-zwrotow.html">Polityka zwrotów</a>
+                    <a href="../polityka-prywatnosci.html">Polityka prywatności</a>
+                    <a href="../regulamin.html">Regulamin</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Kontakt</h4>
+                    <p style="color: #aaa;">
+                        DEV ILSHAT NAZARGULOV<br>
+                        NIP: 6751792499<br>
+                        ul. Stanisława Lema 19/76<br>
+                        31-571 Kraków<br><br>
+                        <a href="mailto:ilshat@nazargulov.com">ilshat@nazargulov.com</a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024-2025 DEV ILSHAT NAZARGULOV. Wszelkie prawa zastrzeżone.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
