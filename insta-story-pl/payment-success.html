@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Płatność zakończona - Story Downloader</title>
+    <title>Powrót z płatności - Story Downloader</title>
     <style>
         * {
             margin: 0;
@@ -32,13 +32,23 @@
         .icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #11d452 0%, #0fc24a 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 24px;
+        }
+        .icon.pending {
+            background: linear-gradient(135deg, #fecb02 0%, #f59e0b 100%);
+            box-shadow: 0 0 30px rgba(254, 203, 2, 0.4);
+        }
+        .icon.success {
+            background: linear-gradient(135deg, #11d452 0%, #0fc24a 100%);
             box-shadow: 0 0 30px rgba(17, 212, 82, 0.4);
+        }
+        .icon.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
         }
         .icon svg {
             width: 40px;
@@ -60,10 +70,10 @@
         .order-id {
             display: inline-block;
             padding: 12px 24px;
-            background: rgba(17, 212, 82, 0.1);
-            border: 1px solid rgba(17, 212, 82, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            color: #11d452;
+            color: #9ca3af;
             font-family: monospace;
             font-size: 14px;
             margin-bottom: 32px;
@@ -108,29 +118,35 @@
             color: #11d452;
             text-decoration: none;
         }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"/>
+        <div class="icon pending" id="statusIcon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="spinner">
+                <path d="M12 2v4m0 12v4m-10-10h4m12 0h4m-3.5-6.5l-2.8 2.8m-5.4 5.4l-2.8 2.8m0-11.3l2.8 2.8m5.4 5.4l2.8 2.8"/>
             </svg>
         </div>
 
-        <h1>Płatność zakończona!</h1>
-        <p class="message">Dziękujemy za zakup. Twoje pobranie zostało dodane do konta.</p>
+        <h1 id="statusTitle">Weryfikacja płatności...</h1>
+        <p class="message" id="statusMessage">Sprawdzamy status Twojej płatności. Proszę czekać.</p>
 
         <div class="order-id" id="orderId">Ładowanie...</div>
 
         <div class="instructions">
             <p>
-                <strong>Następny krok:</strong><br>
-                Wróć do rozszerzenia w przeglądarce i kliknij przycisk pobierania. Twój kredyt został automatycznie dodany.
+                <strong>Ważne:</strong><br>
+                Wróć do rozszerzenia w przeglądarce - tam zobaczysz czy płatność została zaksięgowana. Kredyty zostaną dodane automatycznie po potwierdzeniu płatności.
             </p>
         </div>
 
-        <a href="https://www.instagram.com" class="btn">Otwórz Instagram</a>
+        <a href="https://www.instagram.com" class="btn">Wróć do Instagram</a>
 
         <div class="footer">
             <p>Story Downloader dla Instagrama</p>
@@ -145,12 +161,12 @@
 
         if (orderId) {
             document.getElementById('orderId').textContent = orderId;
-
-            // Store in localStorage so extension can read it
-            localStorage.setItem('igdownloader_paid_order', orderId);
-            localStorage.setItem('igdownloader_paid_time', Date.now().toString());
         } else {
             document.getElementById('orderId').textContent = 'Brak ID zamówienia';
+            document.getElementById('statusIcon').className = 'icon error';
+            document.getElementById('statusIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            document.getElementById('statusTitle').textContent = 'Brak danych';
+            document.getElementById('statusMessage').textContent = 'Nie znaleziono informacji o zamówieniu.';
         }
     </script>
 </body>
